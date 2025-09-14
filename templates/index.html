@@ -1,0 +1,204 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Crying Filter 😢</title>
+  
+  <!-- Embedded CSS -->
+  <style>
+    /* ---- Global Styles ---- */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #121212; /* Dark background */
+      color: #e0e0e0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      align-items: center;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      text-align: center;
+      color: #ff6b6b; /* Slightly sarcastic pink-red */
+      animation: glow 2s infinite alternate;
+    }
+
+    @keyframes glow {
+      from { text-shadow: 0 0 5px #ff6b6b; }
+      to { text-shadow: 0 0 20px #ff6b6b; }
+    }
+
+    /* ---- Upload Section ---- */
+    .upload-container {
+      background-color: #1e1e1e;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+      width: 100%;
+      max-width: 500px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 30px;
+      transition: transform 0.3s ease;
+    }
+
+    .upload-container:hover {
+      transform: translateY(-5px);
+    }
+
+    #fileInput {
+      display: none; /* Hidden real file input */
+    }
+
+    .custom-file-btn {
+      background: linear-gradient(135deg, #ff6b6b, #f94d6a);
+      color: white;
+      padding: 12px 25px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-bottom: 15px;
+      transition: all 0.3s ease;
+    }
+
+    .custom-file-btn:hover {
+      background: linear-gradient(135deg, #f94d6a, #ff8787);
+      transform: scale(1.05);
+    }
+
+    /* ---- Preview Section ---- */
+    .preview {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      width: 100%;
+    }
+
+    .preview img {
+      max-width: 100%;
+      border-radius: 15px;
+      border: 2px solid #ff6b6b;
+      box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+      transition: transform 0.3s ease, filter 0.3s ease;
+    }
+
+    .preview img:hover {
+      transform: scale(1.02);
+      filter: brightness(1.1);
+    }
+
+    /* ---- Result Section ---- */
+    .result-container {
+      background-color: #1e1e1e;
+      padding: 15px;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 500px;
+      margin-bottom: 30px;
+    }
+
+    .result-container img {
+      max-width: 100%;
+      border-radius: 15px;
+      border: 2px solid #4fc3f7;
+      margin-bottom: 10px;
+    }
+
+    .caption {
+      font-style: italic;
+      color: #4fc3f7;
+      text-align: center;
+    }
+
+    /* ---- Responsive ---- */
+    @media (max-width: 600px) {
+      h1 { font-size: 1.5rem; }
+      .custom-file-btn { padding: 10px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>AI Crying Filter 😏</h1>
+  
+  <!-- ---- Upload Section ---- -->
+  <div class="upload-container">
+    <label class="custom-file-btn" for="fileInput">Choose Your Soul-Breaking Selfie</label>
+    <input type="file" id="fileInput" accept="image/*">
+    
+    <!-- Preview -->
+    <div class="preview" id="preview">
+      <p>No photo uploaded yet. Cry a little first.</p>
+    </div>
+  </div>
+
+  <!-- ---- Result Section ---- -->
+  <div class="result-container" id="resultContainer" style="display: none;">
+    <img id="resultImage" src="" alt="Processed Crying Photo">
+    <p class="caption">You look beautiful when you cry, do it more often 💧</p>
+  </div>
+
+  <!-- ---- Embedded JS ---- -->
+  <script>
+    const fileInput = document.getElementById('fileInput');
+    const preview = document.getElementById('preview');
+    const resultContainer = document.getElementById('resultContainer');
+    const resultImage = document.getElementById('resultImage');
+
+    fileInput.addEventListener('change', () => {
+      const file = fileInput.files[0];
+      if (!file) return;
+
+      // Preview uploaded image
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        preview.innerHTML = `<img src="${e.target.result}" alt="Uploaded Photo">`;
+      };
+      reader.readAsDataURL(file);
+
+      // For now, simulate the "processed crying image"
+      // In future, this src will come from Flask backend
+      resultImage.src = URL.createObjectURL(file);
+      resultContainer.style.display = 'flex';
+    });
+    fileInput.addEventListener('change', () => {
+    const file = fileInput.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    fetch("/upload", {
+        method: "POST",
+        body: formData
+    })
+    .then(response => response.blob())
+    .then(blob => {
+        const url = URL.createObjectURL(blob);
+        resultImage.src = url;
+        resultContainer.style.display = 'flex';
+    })
+    .catch(err => alert("Upload failed: " + err));
+});
+
+  </script>
+</body>
+</html>

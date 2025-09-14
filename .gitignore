@@ -1,0 +1,19 @@
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Virtual environment
+venv/
+env/
+
+# VSCode settings (optional)
+.vscode/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Uploaded images (if you don't want to push them)
+# Ignore uploaded files but keep folder
+upload/*
+!upload/.gitkeep
